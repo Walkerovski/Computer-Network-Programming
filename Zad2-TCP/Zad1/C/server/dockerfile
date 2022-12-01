@@ -1,0 +1,5 @@
+FROM gcc:latest
+COPY . /Sockets
+WORKDIR /Sockets/
+RUN gcc -o server server.c
+ENTRYPOINT [ "./server" ]
