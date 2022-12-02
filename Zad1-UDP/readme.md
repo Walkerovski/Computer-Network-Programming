@@ -7,7 +7,7 @@ Skład:
 - Karol Kasperek
 - Piotr Kosmala
 - Mikołaj Gutowski
-## Zad 1
+## Zad 1 UDP
 Klient wysyła, a serwer odbiera datagramy o stałym, niewielkim rozmiarze (rzędu kilkudziesięciu bajtów).
 Datagramy mogą zawierać ustalony „na sztywno” lub generowany napis – np. „abcde….”, „bcdef...”, itd. 
 Powinno być wysyłanych kilka datagramów, po czym klient powinien kończyć pracę. 
@@ -80,13 +80,13 @@ docker run -it --rm --network-alias z26_network --network z26_network --name z26
 Reszta wariantów analogicznie.
 - Wariant python_server z kolejno client.py + client.c
 
-![Alt text](images/C_Py.png)
+![Alt text](../images/C_Py.png)
 - Wariant c_server z kolejno client.c + client.py
 
-![Alt text](images/Py_C.png)
+![Alt text](../images/Py_C.png)
 - Wariant py_server z client.c (zad3)
 
-![Alt text](images/Zad3.png)
+![Alt text](../images/Zad3.png)
 - Koncowy stan sieci z 3 działającymi serwerami na kontenerach
 
-![Alt text](images/Stan_sieci.png)
+![Alt text](../images/Stan_sieci.png)

@@ -9,7 +9,7 @@ if len(sys.argv) < 3:
 else:
    localIP = sys.argv[1]
    localPort = int(sys.argv[2])
-bufferSize = 512
+bufferSize = 8
 
 TCPServerSocket = socket.socket(family = socket.AF_INET, type = socket.SOCK_STREAM)
 TCPServerSocket.bind((localIP, localPort))
@@ -26,6 +26,5 @@ while(True):
             break
          msg = msg.decode() 
          print(msg)
-         host.sendall(msg.encode())
 #nigdy nie osiągnięte
 TCPServerSocket.close()

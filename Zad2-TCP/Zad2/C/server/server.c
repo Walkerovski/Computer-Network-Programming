@@ -4,12 +4,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 void main(void)
 {
     int sock, length, msg, valread, socket_acc;
     struct sockaddr_in name;
-    char buf[1025];
+    char buf[9];
     sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock == -1)
     {
@@ -38,8 +39,10 @@ void main(void)
 
     listen(sock, 16);
     int bytes_recieved;
+    char buf2[512];
     while (true)
     {
+        int counter = 0;
         socket_acc = accept(sock, (struct sockaddr *)&name, (socklen_t *)&length);
         if (socket_acc < 0)
         {
@@ -51,20 +54,21 @@ void main(void)
             /* Read from the socket. */
             while (true)
             {
-                bytes_recieved = read(socket_acc, buf, 1024);
+                bytes_recieved = read(socket_acc, buf, sizeof(buf));
                 if (bytes_recieved == -1)
                 {
                     perror("receiving stream packet");
                     exit(2);
                 }
                 if (bytes_recieved == 0){
+                    buf2[counter] = '\0';
                     break;
                 }
-                buf[bytes_recieved] = '\0';
-                printf("-->%s", buf);
-                fflush(stdout);
-                send(socket_acc, buf, strlen(buf), 0);
+                memcpy(buf2 + counter, buf, bytes_recieved);
+                counter += bytes_recieved;
             }
+            printf("-->%s", buf2);
+            fflush(stdout);
         }
     }
     close(socket_acc);

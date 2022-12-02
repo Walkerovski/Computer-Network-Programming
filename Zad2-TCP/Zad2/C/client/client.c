@@ -45,8 +45,6 @@ int main(int argc, char *argv[])
         msg[strlen(msg) - 2] = '0' + i;
         send(sock, msg, strlen(msg), 0);
         i++;
-        read(sock, msg, 1024);
-        printf("-->%s", msg);
     }
     close(sock);
     exit(0);
