@@ -17,21 +17,21 @@ bufferSize = 1024
 
 
 # define message
-message = 'Test Message no: '
+message = 'Test Message no:  '
 
 # connecting to hosts
 TCPClientSocket = socket.socket(family = socket.AF_INET, type = socket.SOCK_STREAM)
 
+TCPClientSocket.connect(serverAddrPort)
 i = 1
 while i <= 5:
    # sending user message by encoding it
-   TCPClientSocket.connect(serverAddrPort)
    bytesToSend1 = str.encode(f'{message}{i}\0')
    TCPClientSocket.sendall(bytesToSend1)
    ret_msg = TCPClientSocket.recv(bufferSize)
    time.sleep(2)
-   print(message, i, ret_msg)
+   print(f'"<--{message}" {i} | -->"{ret_msg.decode()}"')
    i += 1
-   TCPClientSocket.close()
+TCPClientSocket.close()
 
 

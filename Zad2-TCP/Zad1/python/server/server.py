@@ -13,15 +13,19 @@ bufferSize = 512
 
 TCPServerSocket = socket.socket(family = socket.AF_INET, type = socket.SOCK_STREAM)
 TCPServerSocket.bind((localIP, localPort))
-print("UDP server up and listening")
+print("TCP server up and listening")
 
+TCPServerSocket.listen(16)
 while(True):
    # receiving name from client
    host, addr = TCPServerSocket.accept()
    with host:
-      msg, addr1 = TCPServerSocket.recv(bufferSize) 
-      msg = msg.decode() 
-      print(msg, addr1)
-      host.sendall(msg)
+      while(True):
+         msg = host.recv(bufferSize)
+         if not msg:
+            break
+         msg = msg.decode() 
+         print(msg)
+         host.sendall(msg.encode())
 #nigdy nie osiągnięte
 TCPServerSocket.close()
