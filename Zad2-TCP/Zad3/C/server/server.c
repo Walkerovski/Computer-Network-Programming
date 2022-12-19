@@ -64,7 +64,7 @@ void main(void)
 			pid_t pid = fork();
 			if (pid == 0)
 			{
-				close(socket_fd);
+				close(sock);
 
 				int bytes_recieved;
 				int bufSize = STARTING_BUFFER_SIZE;
@@ -85,7 +85,7 @@ void main(void)
 							bufSize *= 2; 
 							char* newBuffer = (char*)malloc(bufSize * sizeof(char)); 
 							size_t headOffset = bufferHead - buffer; 
-							memcpy(newBuffer, buffer); 
+							memcpy(newBuffer, buffer, headOffset); 
 							free(buffer); 
 							buffer = newBuffer; 
 							bufferHead = buffer + headOffset; 
