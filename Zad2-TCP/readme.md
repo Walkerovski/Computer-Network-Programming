@@ -73,3 +73,35 @@ Staraliśmy się uzyskać jakąkolwiek różnicę w działaniu funkcji send() i 
 
 - Serwer Python
 ![](../images/2_2_Pyserver.png)
+
+## Zad 5
+
+Na bazie wersji 2.1 – 2.2 zmodyfikować serwer tak, aby miał konstrukcję współbieżną, tj.
+obsługiwał każdego klienta w osobnym procesie. Przy czym:
+
+• Dla C. Należy posłużyć się funkcjami fork() oraz (obowiązkowo) wait().
+
+• Dla Pythona należy posłużyć się wątkami, do wyboru: wariant podstawowy lub skorzystanie
+z ThreadPoolExecutor.
+
+Zgodnie z poleceniem zrównoleglono obsługę połączeń między klientem a serwerem. W przypadku serwera w C za pomocą funkcji fork() oraz wait(). W przypadku serwera w Py za pomocą wariantu podstawowego Thread().
+
+- Wariant C_server
+```sh
+docker run -it --rm --network-alias cs_network --network cs_network --name z26_2_3_c_server z26_2_3_c_server:latest 
+docker run -it --rm --network-alias cs_network --network cs_network --name z26_2_3_c_client z26_2_3_c_client:latest 172.21.26.2 8000
+docker run -it --rm --network-alias cs_network --network cs_network --name z26_2_3_python_client z26_2_3_python_client:latest 172.21.26.2 8000
+```
+- Wariant Py_server
+```sh
+docker run -it --rm --network-alias cs_network --network cs_network --name z26_2_3_python_server z26_2_3_python_server:latest 
+docker run -it --rm --network-alias cs_network --network cs_network --name z26_2_3_c_client z26_2_3_c_client:latest 172.21.26.3 8000
+docker run -it --rm --network-alias cs_network --network cs_network --name z26_2_3_python_client z26_2_3_python_client:latest 172.21.26.3 8000
+```
+## Serwer bigubu
+
+- Serwer C
+![](../images/2_3_C.png)
+
+- Serwer Python
+![](../images/2_3_Py.png)
