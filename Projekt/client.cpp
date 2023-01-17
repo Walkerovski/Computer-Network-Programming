@@ -10,18 +10,18 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int sock;
+int sock, sock2;
 struct sockaddr_in name;
 struct hostent *hp;
 enum type{UPLOAD, DOWNLOAD};
 struct packet_start{ 
     enum type type;
+    int packet_size;
     time_t timestamp_;
-    int32_t packet_size;
 };
 
 struct packet_test{ 
-    int32_t id;
+    int id;
     string data;
 };
 
@@ -61,6 +61,20 @@ void send_first(int sock, int type, int packet_size_){
     }
     if (sendto(sock, (const void *) &first, sizeof first, 0, (struct sockaddr *) &name,sizeof name) == -1)
         perror("sending datagram message");
+    char buf[1024];
+    int cos;
+    int cos2;
+    time_t cos3;
+    if ( read(sock2, buf, 1024) == -1 ) {
+        perror("receiving start packet");
+        exit(2); 
+    }
+    memcpy(&cos, buf, sizeof(int));
+    memcpy(&cos2, buf + sizeof(int), sizeof(int));
+    memcpy(&cos3, buf + 2 * sizeof(int), sizeof(time_t));
+    cout << cos << " " << cos2 << " " << cos3 <<"\n";
+
+
 }
 
 void send_packet(int sock, int packet_size_, int how_many_bytes){
@@ -79,6 +93,8 @@ void send_packet(int sock, int packet_size_, int how_many_bytes){
 int main(int argc, char *argv[])
 {
     /* Create socket on which to send. */ 
+    packet_test cos;
+    cout<<sizeof(cos);
     sock = socket(AF_INET, SOCK_DGRAM, 0);
     if (sock == -1) {
         perror("opening datagram socket");
