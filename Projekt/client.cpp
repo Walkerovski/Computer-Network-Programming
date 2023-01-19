@@ -4,6 +4,8 @@ using namespace std;
 int sock, sock2;
 struct sockaddr_in name;
 struct hostent *hp;
+char buf[4096];
+bool PACKET_LOSS_ACHIEVED = false;
 
 pair <int, int> interface(){
     string input;
@@ -16,11 +18,11 @@ pair <int, int> interface(){
         type_input = atoi(input.c_str());
     }
     cout<<"\n";
-    cout<<"Prosimy o podanie wielkości pakietu. Wielkośc pakiety musi być z przedziału 50 - 1000 (wielkość podana w bajtach)\n";
+    cout<<"Prosimy o podanie wielkości pakietu. Wielkośc pakiety musi być z przedziału 512 - 4096 (wielkość podana w bajtach)\n";
     cin>>input;
     int size_input = atoi(input.c_str());
-    while(size_input > 1000 || size_input < 50){
-        cout<<"Podane dane na wejściu są złe! Proszę wpisać wartość z przedziału 50 - 1000 (wielkość podana w bajtach)\n";
+    while(size_input > 4096 || size_input < 512){
+        cout<<"Podane dane na wejściu są złe! Proszę wpisać wartość z przedziału 512 - 4096 (wielkość podana w bajtach)\n";
         cin>>input;
         size_input = atoi(input.c_str());
     }
@@ -50,20 +52,17 @@ void send_first(int sock, int type, int packet_size_){
     }
     if (sendto(sock, (const void *) &first, sizeof first, 0, (struct sockaddr *) &name,sizeof name) == -1)
         perror("sending datagram message");
-    char buf[1024];
-    int cos;
-    int cos2;
-    time_t cos3;
-    if ( read(sock2, buf, 1024) == -1 ) {
+    int type_of_test, packet_size;
+    time_t server_time_stamp;
+    if ( read(sock2, buf, 4096) == -1 ) {
         perror("receiving start packet");
         exit(2); 
     }
     timestamp = chrono::time_point_cast<std::chrono::microseconds>(chrono::system_clock::now());
     time_t last_packet_time = timestamp.time_since_epoch().count();
-    memcpy(&cos, buf, sizeof(int));
-    memcpy(&cos2, buf + sizeof(int), sizeof(int));
-    memcpy(&cos3, buf + 2 * sizeof(int), sizeof(time_t));
-    cout << cos << " " << cos2 << " " << cos3 <<"\n";
+    memcpy(&type_of_test, buf, sizeof(int));
+    memcpy(&packet_size, buf + sizeof(int), sizeof(int));
+    memcpy(&server_time_stamp, buf + 2 * sizeof(int), sizeof(time_t));
     cout << "Ping: " << (last_packet_time - first_packet_time) / 1000.0 << "ms" << endl; 
     close(sock2);
 }
@@ -79,14 +78,11 @@ void send_packet(int sock, int packet_size_, int how_many_bytes){
         packet_test test = {.id = loop, .data = data_};
         if (sendto(sock, (const void *) &test, strlen(data_) + sizeof(int), 0, (struct sockaddr *) &name,sizeof name) == -1)
             perror("sending datagram message");
+        usleep(1);
         bytes_send += packet_size_;
         ++loop;
     }
-    char stop[] = "STOP";
-    packet_test last_packet = {.id = -1, .data = stop};
-    if (sendto(sock, (const void *) &last_packet, sizeof(last_packet), 0, (struct sockaddr *) &name,sizeof name) == -1)
-            perror("sending datagram message");
-    
+
     struct sockaddr_in read_name;
     read_name.sin_family = AF_INET;
     read_name.sin_addr.s_addr = INADDR_ANY;
@@ -97,18 +93,32 @@ void send_packet(int sock, int packet_size_, int how_many_bytes){
         exit(1);
     }
 
-    char buf[1024];
+    char stop[] = "STOP";
+    packet_test last_packet = {.id = -1, .data = stop};
+
+    sleep(1);
+    if (sendto(sock, (const void *) &last_packet, 
+            sizeof(last_packet), 0, (struct sockaddr *) &name,
+                sizeof name) == -1)
+            perror("sending datagram message");
+
+
     int number_of_packets;
-    time_t first_packet;
+    time_t first_packet_time;
     time_t last_packet_time;
-    if ( read(sock2, buf, 1024) == -1 ) {
+
+    if ( read(sock2, buf, 4096) == -1 ) {
         perror("receiving start packet");
         exit(2); 
     }
     memcpy(&number_of_packets, buf, sizeof(int));
-    // memcpy(&first_packet, buf + 2 * sizeof(int), sizeof(time_t));
-    // memcpy(&last_packet, buf + 2 * sizeof(int) + sizeof(time_t), sizeof(time_t));
-    cout << number_of_packets << " " << " " << first_packet << " " << last_packet_time << endl;
+    float packet_loss = (1 - number_of_packets / (float)loop ) * 100;
+    if(packet_loss > 20)
+    {
+        PACKET_LOSS_ACHIEVED = 1;
+    }
+    cout << "Utrata pakietów: " << packet_loss <<"%\n";
+    cout << (1 - (packet_loss / 100))* how_many_bytes * 5 * 8 / 1e6 <<"Mbps\n";
     close(sock2);
 }
 
@@ -130,11 +140,13 @@ int main(int argc, char *argv[])
     name.sin_family = AF_INET;
     name.sin_port = htons( atoi( argv[2] ));
     pair <int, int> user_input = interface();
-    int summary_bytes_to_send = 200000 / 8; // 0.2Mb / 0.2s = 1Mb/s
+    int summary_bytes_to_send = 2e5 / 8; // 0.2Mb / 0.2s = 1Mb/s
     while(true){
         send_first(sock, user_input.first, user_input.second);
         send_packet(sock, user_input.second, summary_bytes_to_send);
-        summary_bytes_to_send += 2000000 / 8; // 2Mb / 0.2s = 10Mb/s
+        if(PACKET_LOSS_ACHIEVED)
+            break;
+        summary_bytes_to_send += 2e6 / 8; // 2Mb / 0.2s = 10Mb/s
     }
     exit(0);
 }

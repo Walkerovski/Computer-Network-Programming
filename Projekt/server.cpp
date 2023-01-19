@@ -4,12 +4,12 @@ using namespace std;
 
 int main()
 {
-    int sock;
     socklen_t length;
     struct sockaddr_in name;
-    char buf[1024];
-    sock = socket(AF_INET, SOCK_DGRAM, 0);
-    if (sock == -1) {
+    char buf[4096];
+    int download = socket(AF_INET, SOCK_DGRAM, 0);
+    int upload = socket(AF_INET, SOCK_DGRAM, 0);
+    if (download == -1 || upload == -1) {
         perror("opening datagram socket");
         exit(1);
     }
@@ -18,26 +18,25 @@ int main()
     name.sin_family = AF_INET;
     name.sin_addr.s_addr = INADDR_ANY;
     name.sin_port = htons(8000);
-    if (bind(sock,(struct sockaddr *)&name, sizeof name) == -1) {
+    if (bind(download,(struct sockaddr *)&name, sizeof name) == -1) {
         perror("binding datagram socket");
         exit(1);
     }
     
     /* Wydrukuj na konsoli numer portu */
     length = sizeof(name);
-    if (getsockname(sock,(struct sockaddr *) &name, &length) == -1) {
+    if (getsockname(download,(struct sockaddr *) &name, &length) == -1) {
         perror("getting socket name");
         exit(1);
     }
     printf("Socket port #%d\n", ntohs(name.sin_port));
-    int sock2 = socket(AF_INET, SOCK_DGRAM, 0);
     struct sockaddr_in source_address;
     socklen_t source_len = sizeof(source_address);
     int port = 8001;
 
     while(true){
         /* Read from the socket. */
-        if ( recvfrom(sock, buf, 1024, MSG_WAITALL, (sockaddr *) &source_address, &source_len) == -1 ) {
+        if ( recvfrom(download, buf, 4096, MSG_WAITALL, (sockaddr *) &source_address, &source_len) == -1 ) {
             perror("receiving start packet");
             exit(2); 
         }
@@ -50,8 +49,6 @@ int main()
         memcpy(&packet_size, buf + sizeof(int), sizeof(int));
         memcpy(&start_timestamp, buf + 2 * sizeof(int), sizeof(time_t));
 
-        cout << test_type << " " << packet_size << " " << start_timestamp <<"\n";
-
         auto timestamp = chrono::time_point_cast<std::chrono::microseconds>(chrono::system_clock::now());
         time_t first_packet_timestamp = timestamp.time_since_epoch().count();
         packet_start response_first;
@@ -61,15 +58,17 @@ int main()
             response_first.type = DOWNLOAD;
         else
             response_first.type = UPLOAD;
-        if (sendto(sock2, (const void *) &response_first, sizeof response_first, 0, (struct sockaddr *) &source_address, source_len) == -1)
+        if (sendto(upload, (const void *) &response_first, sizeof response_first, 0, (struct sockaddr *) &source_address, source_len) == -1)
             perror("sending datagram message");
         
         int packet_count = 0;
         char *data;
         int id = 0;
+        bool terminated = false;
+        time_t start = clock();
+        packet_response_start server_response;
         while(true){
-            //int bytes_received = recvfrom(sock, &buf, 1024, MSG_WAITALL, (sockaddr *) &source_address, &source_len);
-            int bytes_received = read(sock, buf, 1024);
+            int bytes_received = read(download, buf, 4096);
             ++packet_count;
             if (bytes_received == -1)
             {
@@ -82,23 +81,35 @@ int main()
             if (bytes_received == 8)
                 break;
             memcpy(&id, buf, sizeof(int));
-            cout << id << endl;
-            if (id == -1){
+            if (!terminated && (clock() - start) / (double)CLOCKS_PER_SEC > 0.2 )
+            {
                 auto timestamp = chrono::time_point_cast<std::chrono::microseconds>(chrono::system_clock::now());
                 time_t last_packet_timestamp = timestamp.time_since_epoch().count();
-                cout << "Koniec odbierania" << endl;
-                packet_response_start server_response = {
+                server_response = {
                     .number_of_packets=packet_count,
                     .first_packet=first_packet_timestamp,
                     .last_packet=last_packet_timestamp
                 };
-                if (sendto(sock2, (const void *) &server_response, sizeof server_response, 0, (struct sockaddr *) &source_address, source_len) == -1)
+                terminated = true;
+            }
+            if (id == -1){
+                if(!terminated)
+                {
+                    auto timestamp = chrono::time_point_cast<std::chrono::microseconds>(chrono::system_clock::now());
+                    time_t last_packet_timestamp = timestamp.time_since_epoch().count();
+                    server_response = {
+                        .number_of_packets=packet_count,
+                        .first_packet=first_packet_timestamp,
+                        .last_packet=last_packet_timestamp
+                };
+                }
+                if (sendto(upload, (const void *) &server_response, sizeof server_response, 0, (struct sockaddr *) &source_address, source_len) == -1)
                     perror("sending datagram message");
                 break;
             }
         }
     }
-    // close(sock);
-    // close(sock2);
+    // close(download);
+    // close(upload);
     exit(0);
 }
