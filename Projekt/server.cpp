@@ -108,7 +108,6 @@ void receive_packet_upload(time_t first_packet_timestamp){
             }
             if (sendto(upload, (const void *) &server_response, sizeof server_response, 0, (struct sockaddr *) &source_address, source_len) == -1)
                 perror("sending datagram message");
-            cout << packet_count << endl;
             break;
         }
     }
@@ -123,7 +122,6 @@ void send_packet_download(int packet_size_, int how_many_bytes){
     data_[packet_size_] = '\0';
     auto timestamp = chrono::time_point_cast<std::chrono::microseconds>(chrono::system_clock::now());
     time_t first_packet_time = timestamp.time_since_epoch().count();
-    cout << how_many_bytes << endl;
     while(bytes_send < how_many_bytes){
         packet_test test = {.id = loop, .data = data_};
         if (sendto(upload, (const void *) &test, strlen(data_) + sizeof(int), 0, (struct sockaddr *) &source_address, source_len) == -1)
@@ -169,7 +167,7 @@ int main()
         /* Read from the socket. */
         pair<packet_start, int> test_data = receive_first();
         start_test(test_data.first.timestamp_, test_data.second, test_data.first.packet_size, summary_bytes_to_send);
-        summary_bytes_to_send += 2e7 / 8; // 2Mb / 0.2s = 10Mb/s
+        summary_bytes_to_send += 2e6 / 8; // 2Mb / 0.2s = 10Mb/s
     }
     close(download);
     close(upload);

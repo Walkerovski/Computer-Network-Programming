@@ -173,13 +173,7 @@ void receive_packet_download(int sock, int packet_size_, int how_many_bytes){
         memcpy(&id, buf, sizeof(int));
         if (!terminated && (clock() - start) / (double)CLOCKS_PER_SEC > 0.2 )
         {
-            if ( read(sock2, buf, 4096) == -1 ) {
-                perror("receiving stats packet");
-                exit(2); 
-            }
-            memcpy(&number_of_packets, buf, sizeof(int));
-            cout << "num_of_packets: " << number_of_packets << "packet_count: " << packet_count << endl;
-            float packet_loss = (1 - packet_count / (float)number_of_packets) * 100;
+            float packet_loss = (1 - packet_count / (float)how_many_bytes * packet_size_) * 100;
             if(packet_loss > 20)
             {
                 PACKET_LOSS_ACHIEVED = 1;
