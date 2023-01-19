@@ -1,14 +1,4 @@
-#include "common.h"
-
-using namespace std;
-
-char buf[4096];
-socklen_t length;
-struct sockaddr_in name;
-int upload, download;
-struct sockaddr_in source_address;
-socklen_t source_len = sizeof(source_address);
-int port = 8001;
+#include "server.h"
 
 void setup_sockets(){
     upload = socket(AF_INET, SOCK_DGRAM, 0);
@@ -21,7 +11,7 @@ void setup_sockets(){
     /* Create name with wildcards. */
     name.sin_family = AF_INET;
     name.sin_addr.s_addr = INADDR_ANY;
-    name.sin_port = htons(8000);
+    name.sin_port = htons(8002);
     if (bind(download,(struct sockaddr *)&name, sizeof name) == -1) {
         perror("binding datagram socket");
         exit(1);

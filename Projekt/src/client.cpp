@@ -1,33 +1,6 @@
-#include "common.h"
-using namespace std;
-
-int sock, sock2;
-struct sockaddr_in name;
-struct hostent *hp;
-char buf[4096];
-bool PACKET_LOSS_ACHIEVED = false;
-
-pair <int, int> interface(){
-    string input;
-    cout<<"Witamy w speedteście! Prosimy o podanie typu operacji: \n1 - DOWNLOAD \n2 - UPLOAD \n";
-    cin>>input;
-    int type_input = atoi(input.c_str());
-    while(type_input > 2 || type_input <= 0){
-        cout<<"Podane dane na wejściu są złe! Proszę wybrać jedną z poniższych operacji: \n1 - DOWNLOAD \n2 - UPLOAD \n";
-        cin>>input;
-        type_input = atoi(input.c_str());
-    }
-    cout<<"\n";
-    cout<<"Prosimy o podanie wielkości pakietu. Wielkośc pakiety musi być z przedziału 512 - 4096 (wielkość podana w bajtach)\n";
-    cin>>input;
-    int size_input = atoi(input.c_str());
-    while(size_input > 4096 || size_input < 512){
-        cout<<"Podane dane na wejściu są złe! Proszę wpisać wartość z przedziału 512 - 4096 (wielkość podana w bajtach)\n";
-        cin>>input;
-        size_input = atoi(input.c_str());
-    }
-    return {type_input, size_input};
-}
+#include "client.h"
+#include "interface.h"
+#include "statistics.h"
 
 void setup_sockets(const char * address, const char * port){
     /* Create socket on which to send. */ 
@@ -129,13 +102,12 @@ void send_packet_upload(int sock, int packet_size_, int how_many_bytes){
         exit(2); 
     }
     memcpy(&number_of_packets, buf, sizeof(int));
-    float packet_loss = (1 - number_of_packets / (float)loop ) * 100;
+    float packet_loss = calculate_packet_loss(number_of_packets, loop);
     if(packet_loss > 20)
     {
         PACKET_LOSS_ACHIEVED = 1;
     }
-    cout << "Utrata pakietów: " << packet_loss <<"%\n";
-    cout << (1 - (packet_loss / 100))* how_many_bytes * 5 * 8 / 1e6 <<"Mbps\n";
+    print_internet_speed(packet_loss, how_many_bytes);
     close(sock2);
 }
 
@@ -173,13 +145,12 @@ void receive_packet_download(int sock, int packet_size_, int how_many_bytes){
         memcpy(&id, buf, sizeof(int));
         if (!terminated && (clock() - start) / (double)CLOCKS_PER_SEC > 0.2 )
         {
-            float packet_loss = (1 - packet_count / (float)how_many_bytes * packet_size_) * 100;
+            float packet_loss = calculate_packet_loss(packet_count, how_many_bytes * packet_size_);
             if(packet_loss > 20)
             {
                 PACKET_LOSS_ACHIEVED = 1;
             }
-            cout << "Utrata pakietów: " << packet_loss <<"%\n";
-            cout << (1 - (packet_loss / 100))* how_many_bytes * 5 * 8 / 1e6 <<"Mbps\n";
+            print_internet_speed(packet_loss, how_many_bytes);
             terminated = true;
         }
         if (id == -1){
@@ -190,14 +161,12 @@ void receive_packet_download(int sock, int packet_size_, int how_many_bytes){
                         exit(2); 
                     }
                     memcpy(&number_of_packets, buf, sizeof(int));
-                    cout << "num_of_packets: " << number_of_packets << "packet_count: " << packet_count << endl;
-                    float packet_loss = (1 - packet_count/ (float)number_of_packets) * 100;
+                    float packet_loss = calculate_packet_loss(packet_count, number_of_packets);
                     if(packet_loss > 20)
                     {
                         PACKET_LOSS_ACHIEVED = 1;
                     }
-                    cout << "Utrata pakietów: " << packet_loss <<"%\n";
-                    cout << (1 - (packet_loss / 100))* how_many_bytes * 5 * 8 / 1e6 <<"Mbps\n";
+                    print_internet_speed(packet_loss, how_many_bytes);
                 }
             close(sock2);
             break;
@@ -219,7 +188,7 @@ int main(int argc, char *argv[])
         exit(0);
     }
     setup_sockets(argv[1], argv[2]);
-    pair <int, int> user_input = interface();
+    pair <int, int> user_input = interface_read();
     int summary_bytes_to_send = 2e5 / 8; // 0.2Mb / 0.2s = 1Mb/s
     while(true){
         send_first(sock, user_input.first, user_input.second);
