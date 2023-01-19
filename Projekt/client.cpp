@@ -29,6 +29,23 @@ pair <int, int> interface(){
     return {type_input, size_input};
 }
 
+void setup_sockets(const char * address, const char * port){
+    /* Create socket on which to send. */ 
+    sock = socket(AF_INET, SOCK_DGRAM, 0);
+    if (sock == -1) {
+        perror("opening datagram socket");
+        exit(1);
+    }
+    hp = gethostbyname(address);
+    if (hp == (struct hostent *) 0) {
+        fprintf(stderr, "%s: unknown host\n", address);
+        exit(2);
+    }
+    memcpy((char *) &name.sin_addr, (char *) hp->h_addr, hp->h_length);
+    name.sin_family = AF_INET;
+    name.sin_port = htons(atoi(port));
+}
+
 void send_first(int sock, int type, int packet_size_){
     packet_start first;
     struct sockaddr_in read_name;
@@ -67,7 +84,7 @@ void send_first(int sock, int type, int packet_size_){
     close(sock2);
 }
 
-void send_packet(int sock, int packet_size_, int how_many_bytes){
+void send_packet_upload(int sock, int packet_size_, int how_many_bytes){
     int bytes_send = 0;
     int loop = 1;
     char data_[packet_size_];
@@ -122,28 +139,97 @@ void send_packet(int sock, int packet_size_, int how_many_bytes){
     close(sock2);
 }
 
-int main(int argc, char *argv[])
-{
-    /* Create socket on which to send. */ 
-    packet_test cos;
-    sock = socket(AF_INET, SOCK_DGRAM, 0);
-    if (sock == -1) {
-        perror("opening datagram socket");
+void receive_packet_download(int sock, int packet_size_, int how_many_bytes){
+    int packet_count = 0;
+    char *data;
+    int id = 0;
+    bool terminated = false;
+    time_t start = clock();
+    packet_response_start server_response;
+    struct sockaddr_in read_name;
+    read_name.sin_family = AF_INET;
+    read_name.sin_addr.s_addr = INADDR_ANY;
+    read_name.sin_port = htons(8001);
+    sock2 = socket(AF_INET, SOCK_DGRAM, 0);
+    if (bind(sock2,(struct sockaddr *)&read_name, sizeof read_name) == -1) {
+        perror("binding datagram socket");
         exit(1);
     }
-    hp = gethostbyname(argv[1]);
-    if (hp == (struct hostent *) 0) {
-        fprintf(stderr, "%s: unknown host\n", argv[1]);
-        exit(2);
+    while(true){
+        int number_of_packets;
+        time_t first_packet_time;
+        time_t last_packet_time;
+        int bytes_received = read(sock2, buf, 4096);
+        ++packet_count;
+        if (bytes_received == -1)
+        {
+            perror("receiving stream packet");
+            exit(2);
+        }
+        if (bytes_received == 0)
+            break;
+        if (bytes_received == 8)
+            break;
+        memcpy(&id, buf, sizeof(int));
+        if (!terminated && (clock() - start) / (double)CLOCKS_PER_SEC > 0.2 )
+        {
+            if ( read(sock2, buf, 4096) == -1 ) {
+                perror("receiving stats packet");
+                exit(2); 
+            }
+            memcpy(&number_of_packets, buf, sizeof(int));
+            cout << "num_of_packets: " << number_of_packets << "packet_count: " << packet_count << endl;
+            float packet_loss = (1 - packet_count / (float)number_of_packets) * 100;
+            if(packet_loss > 20)
+            {
+                PACKET_LOSS_ACHIEVED = 1;
+            }
+            cout << "Utrata pakietów: " << packet_loss <<"%\n";
+            cout << (1 - (packet_loss / 100))* how_many_bytes * 5 * 8 / 1e6 <<"Mbps\n";
+            terminated = true;
+        }
+        if (id == -1){
+            if(!terminated)
+                {
+                    if ( read(sock2, buf, 4096) == -1 ) {
+                        perror("receiving stats packet");
+                        exit(2); 
+                    }
+                    memcpy(&number_of_packets, buf, sizeof(int));
+                    cout << "num_of_packets: " << number_of_packets << "packet_count: " << packet_count << endl;
+                    float packet_loss = (1 - packet_count/ (float)number_of_packets) * 100;
+                    if(packet_loss > 20)
+                    {
+                        PACKET_LOSS_ACHIEVED = 1;
+                    }
+                    cout << "Utrata pakietów: " << packet_loss <<"%\n";
+                    cout << (1 - (packet_loss / 100))* how_many_bytes * 5 * 8 / 1e6 <<"Mbps\n";
+                }
+            close(sock2);
+            break;
+        }
     }
-    memcpy((char *) &name.sin_addr, (char *) hp->h_addr, hp->h_length);
-    name.sin_family = AF_INET;
-    name.sin_port = htons( atoi( argv[2] ));
+}
+
+void start_test(int type, int sock, int packet_size_, int how_many_bytes){
+    if (type == 1)
+        receive_packet_download(sock, packet_size_, how_many_bytes);
+    if (type == 2)
+        send_packet_upload(sock, packet_size_, how_many_bytes);
+}
+
+int main(int argc, char *argv[])
+{
+    if (argc != 3){
+        cout << "Prosimy o podanie adresu serwera i portu" << endl;
+        exit(0);
+    }
+    setup_sockets(argv[1], argv[2]);
     pair <int, int> user_input = interface();
     int summary_bytes_to_send = 2e5 / 8; // 0.2Mb / 0.2s = 1Mb/s
     while(true){
         send_first(sock, user_input.first, user_input.second);
-        send_packet(sock, user_input.second, summary_bytes_to_send);
+        start_test(user_input.first, sock, user_input.second, summary_bytes_to_send);
         if(PACKET_LOSS_ACHIEVED)
             break;
         summary_bytes_to_send += 2e6 / 8; // 2Mb / 0.2s = 10Mb/s
