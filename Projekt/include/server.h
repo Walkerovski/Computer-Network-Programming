@@ -10,6 +10,7 @@ int upload, download;
 struct sockaddr_in source_address;
 socklen_t source_len = sizeof(source_address);
 int port = 8001;
+ofstream Plik("./server_logs.txt");
 
 void setup_sockets();
 pair<packet_start, int> receive_first();
