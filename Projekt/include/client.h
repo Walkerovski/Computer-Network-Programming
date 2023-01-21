@@ -3,7 +3,7 @@
 
 #include "common.h"
 
-int sock, sock2;
+int sock;
 struct sockaddr_in name;
 struct hostent *hp;
 struct sockaddr_in read_name;

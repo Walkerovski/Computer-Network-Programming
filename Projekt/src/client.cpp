@@ -41,12 +41,12 @@ void send_first(int sock, int type, int packet_size_){
     else if(type == 2){
         first.type = UPLOAD;
     }
-    if (sendto(sock, (const void *) &first, sizeof first, 0, (struct sockaddr *) &name,sizeof name) == -1)
+    if (sendto(sock, (const void *) &first, sizeof first, 0, (struct sockaddr *) &name, sizeof name) == -1)
         perror("sending datagram message");
     Plik << "---Lin44: Wysłano pakiet startowy\n";
     int type_of_test, packet_size;
     time_t server_time_stamp;
-    if ( read(sock2, buf, 4096) == -1 ) {
+    if ( read(sock, buf, 4096) == -1 ) {
         perror("receiving start packet");
         exit(2); 
     }
@@ -71,7 +71,7 @@ void send_packet_upload(int sock, int packet_size_, int how_many_bytes){
     Plik << "---Lin72: Wysyłanie danych\n";
     while(bytes_send < how_many_bytes){
         packet_test test = {.id = loop, .data = data_};
-        if (sendto(sock, (const void *) &test, strlen(data_) + sizeof(int), 0, (struct sockaddr *) &name,sizeof name) == -1)
+        if (sendto(sock, (const void *) &test, strlen(data_) + sizeof(int), 0, (struct sockaddr *) &name, sizeof name) == -1)
             perror("sending datagram message");
         usleep(1);
         bytes_send += packet_size_;
@@ -97,8 +97,7 @@ void send_packet_upload(int sock, int packet_size_, int how_many_bytes){
     int number_of_packets;
     time_t first_packet_time;
     time_t last_packet_time;
-
-    if ( read(sock2, buf, 4096) == -1 ) {
+    if ( read(sock, buf, 4096) == -1 ) {
         perror("receiving start packet");
         exit(2); 
     }
@@ -122,12 +121,11 @@ void receive_packet_download(int sock, int packet_size_, int how_many_bytes){
     bool terminated = false;
     time_t start = clock();
     packet_response_start server_response;
-    struct sockaddr_in read_name;
     while(true){
         int number_of_packets;
         time_t first_packet_time;
         time_t last_packet_time;
-        int bytes_received = read(sock2, buf, 4096);
+        int bytes_received = read(sock, buf, 4096);
         ++packet_count;
         if (bytes_received == -1)
         {
@@ -155,7 +153,7 @@ void receive_packet_download(int sock, int packet_size_, int how_many_bytes){
             if(!terminated)
                 {
                     Plik << "---Lin155: Udało się odebrać wszystkie pakiety! Etap zakończony\n";
-                    if ( read(sock2, buf, 4096) == -1 ) {
+                    if ( read(sock, buf, 4096) == -1 ) {
                         perror("receiving stats packet");
                         exit(2); 
                     }
@@ -209,5 +207,6 @@ int main(int argc, char *argv[])
     }
     Plik << "***ZAKOŃCZENIE DZIAŁANIA KLIENTA***\n\n\n\n";
     Plik.close();
+    close(sock);
     exit(0);
 }
