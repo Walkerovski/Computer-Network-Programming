@@ -18,7 +18,7 @@
 
 using namespace std;
 
-enum type{UPLOAD = 2, DOWNLOAD = 1};
+enum type{UPLOAD = 2, DOWNLOAD = 1, BREAK = 3};
 
 struct packet_start{ 
     enum type type;

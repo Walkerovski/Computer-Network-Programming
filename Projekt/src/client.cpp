@@ -36,6 +36,9 @@ void send_first(int sock, int type, int packet_size_){
     else if(type == 2){
         first.type = UPLOAD;
     }
+    else if(type == 3){
+        first.type = BREAK;
+    }
     if (sendto(sock, (const void *) &first, sizeof first, 0, (struct sockaddr *) &name, sizeof name) == -1)
         perror("sending datagram message");
     Plik << "---Lin39: Wysłano pakiet startowy\n";

@@ -54,6 +54,7 @@ pair<packet_start, int> receive_first(){
         Plik << "---Lin41: Wybrano test wysyłania\n";
     }
     else if(test_type == 3){
+        response_first.type = BREAK;
         summary_bytes_to_send = 2e5 / 8;
         Plik << "---Lin58: Klient zakończył połączenie\n";
     }
