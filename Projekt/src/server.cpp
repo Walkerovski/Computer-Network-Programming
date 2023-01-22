@@ -47,26 +47,26 @@ pair<packet_start, int> receive_first(){
     response_first.timestamp_ =  first_packet_timestamp;
     if(test_type == 1){
         response_first.type = DOWNLOAD;
-        Plik << "---Lin41: Wybrano test pobierania\n";
+        Plik << "---Lin48: Wybrano test pobierania\n";
     }
     else if(test_type == 2){
         response_first.type = UPLOAD;
-        Plik << "---Lin41: Wybrano test wysyłania\n";
+        Plik << "---Lin52: Wybrano test wysyłania\n";
     }
     else if(test_type == 3){
         response_first.type = BREAK;
         summary_bytes_to_send = 2e5 / 8;
-        Plik << "---Lin58: Klient zakończył połączenie\n";
+        Plik << "---Lin56: Klient zakończył połączenie\n";
     }
     if (sendto(upload, (const void *) &response_first, sizeof response_first, 0, (struct sockaddr *) &source_address, source_len) == -1)
         perror("sending datagram message");
-    Plik << "---Lin58: Odesłano odpowiedź na pakiet startowy\n";
+    Plik << "---Lin61: Odesłano odpowiedź na pakiet startowy\n";
     
     return {response_first, test_type};
 }
 
 void receive_packet_upload(time_t first_packet_timestamp){
-    Plik << "---Lin65: Rozpoczęto test wysyłania danych\n";
+    Plik << "---Lin68: Rozpoczęto test wysyłania danych\n";
     int packet_count = 0;
     char *data;
     int id = 0;
@@ -89,7 +89,7 @@ void receive_packet_upload(time_t first_packet_timestamp){
         memcpy(&id, buf, sizeof(int));
         if (!terminated && (clock() - start) / (double)CLOCKS_PER_SEC > 0.2 )
         {
-            Plik << "---Lin87: Przekroczono limit czasu odczytawania, liczba odczytanych pakietów: *** "<<packet_count<<" ***\n";
+            Plik << "---Lin90: Przekroczono limit czasu odczytawania, liczba odczytanych pakietów: *** "<<packet_count<<" ***\n";
             auto timestamp = chrono::time_point_cast<std::chrono::microseconds>(chrono::system_clock::now());
             time_t last_packet_timestamp = timestamp.time_since_epoch().count();
             server_response = {
@@ -103,7 +103,7 @@ void receive_packet_upload(time_t first_packet_timestamp){
             Plik << "---Lin99: Zakończono odbieranie danych\n";
             if(!terminated)
             {
-                Plik << "---Lin101: Udało się odebrać wszystkie pakiety! Etap zakończony\n";
+                Plik << "---Lin104: Udało się odebrać wszystkie pakiety! Etap zakończony\n";
                 auto timestamp = chrono::time_point_cast<std::chrono::microseconds>(chrono::system_clock::now());
                 time_t last_packet_timestamp = timestamp.time_since_epoch().count();
                 server_response = {
@@ -114,24 +114,24 @@ void receive_packet_upload(time_t first_packet_timestamp){
             }
             if (sendto(upload, (const void *) &server_response, sizeof server_response, 0, (struct sockaddr *) &source_address, source_len) == -1)
                 perror("sending datagram message");
-            Plik << "---Lin112: Odesłano informację do klienta o ilości odebranych pakietów\n";
+            Plik << "---Lin115: Odesłano informację do klienta o ilości odebranych pakietów\n";
             break;
         }
     }
 }
 
 void send_packet_download(int packet_size_, int how_many_bytes){
-    Plik << "---Lin120: Rozpoczęto test pobierania danych\n";
+    Plik << "---Lin123: Rozpoczęto test pobierania danych\n";
     int bytes_send = 0;
     int loop = 1;
     char data_[packet_size_];
     for (int i = 0; i < packet_size_; ++i)
         data_[i] = 'x';
     data_[packet_size_] = '\0';
-    Plik << "---Lin125: Utworzono pakiet o podanym przez kliencia rozmiarze\n";
+    Plik << "---Lin128: Utworzono pakiet o podanym przez kliencia rozmiarze\n";
     auto timestamp = chrono::time_point_cast<std::chrono::microseconds>(chrono::system_clock::now());
     time_t first_packet_time = timestamp.time_since_epoch().count();
-    Plik << "---Lin132: Wysyłanie danych\n";
+    Plik << "---Lin135: Wysyłanie danych\n";
     while(bytes_send < how_many_bytes){
         packet_test test = {.id = loop, .data = data_};
         if (sendto(upload, (const void *) &test, strlen(data_) + sizeof(int), 0, (struct sockaddr *) &source_address, source_len) == -1)
@@ -141,14 +141,14 @@ void send_packet_download(int packet_size_, int how_many_bytes){
         ++loop;
     }
 
-    Plik << "---Lin139: Wszystkie pakiety testowe wysłane\n";
+    Plik << "---Lin142: Wszystkie pakiety testowe wysłane\n";
     char stop[] = "STOP";
     packet_test last_packet = {.id = -1, .data = stop};
 
     sleep(1);
     if (sendto(upload, (const void *) &last_packet, sizeof(last_packet), 0, (struct sockaddr *) &source_address, source_len) == -1)
             perror("sending last packet");
-    Plik << "---Lin146: Wysłanie pakietu kończącego etap testu\n";
+    Plik << "---Lin149: Wysłanie pakietu kończącego etap testu\n";
 
     timestamp = chrono::time_point_cast<std::chrono::microseconds>(chrono::system_clock::now());
     time_t last_packet_timestamp = timestamp.time_since_epoch().count();
@@ -159,17 +159,17 @@ void send_packet_download(int packet_size_, int how_many_bytes){
     };
     if (sendto(upload, (const void *) &server_response, sizeof server_response, 0, (struct sockaddr *) &source_address, source_len) == -1)
         perror("sending network stats");
-    Plik << "---Lin157: Odesłano informację o ilości wysłanych pakietów\n";
+    Plik << "---Lin160: Odesłano informację o ilości wysłanych pakietów\n";
 }
 
 void start_test(time_t first_packet_timestamp, int type, int packet_size_, int how_many_bytes){
     if (type == 1){
-        Plik << "---Lin163: Wybrano test pobierania\n";
+        Plik << "---Lin165: Wybrano test pobierania\n";
         send_packet_download(packet_size_, how_many_bytes);
     }
     if (type == 2){
         receive_packet_upload(first_packet_timestamp);
-        Plik << "---Lin167: Wybrano test wysyłania\n";
+        Plik << "---Lin171: Wybrano test wysyłania\n";
     }
 }
 

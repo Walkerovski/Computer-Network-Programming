@@ -1,0 +1,268 @@
+***ROZPOCZĘCIE DZIAŁANIA KLIENTA***
+
+
+
+---Lin9: Otworzono gniazdo do wysyłania
+---Lin15: Otworzono gniazdo do odbierania
+***ZAKOŃCZONO USTAWIANIE GNIAZD***
+
+
+
+***ZAKOŃCZONO INTERAKCJĘ Z UŻYTKOWNIKIEM***
+
+
+
+---Lin39: Wysłano pakiet startowy
+---Lin44: Odebrano odpowiedź na pakiet startowy
+---Lin54: Obliczono ping na podstawie komunikacji i wyświetlono użytkownikowi
+***WYSŁANO INFORMACJĘ DO SERWERA O TYPIE TESTU***
+
+
+
+---Lin181: Wybrano test wysyłania
+---Lin58: Rozpoczęto test wysyłania danych
+---Lin67: Wysyłanie danych
+---Lin74: Wszystkie pakiety testowe wysłane
+---Lin82: Wysłanie pakietu kończącego etap testu
+---Lin91: Odebranie infomacji o ilości odebranych pakietów
+---Lin97: Obliczono ilość utraconych pakietów
+---Lin103: Wyświetlono użytkownikowi prędkość po aktualnym etapie testu
+***ZAKOŃCZONO 1 ETAP TESTU***
+
+
+
+---Lin39: Wysłano pakiet startowy
+---Lin44: Odebrano odpowiedź na pakiet startowy
+---Lin54: Obliczono ping na podstawie komunikacji i wyświetlono użytkownikowi
+***WYSŁANO INFORMACJĘ DO SERWERA O TYPIE TESTU***
+
+
+
+---Lin181: Wybrano test wysyłania
+---Lin58: Rozpoczęto test wysyłania danych
+---Lin67: Wysyłanie danych
+---Lin74: Wszystkie pakiety testowe wysłane
+---Lin82: Wysłanie pakietu kończącego etap testu
+---Lin91: Odebranie infomacji o ilości odebranych pakietów
+---Lin97: Obliczono ilość utraconych pakietów
+---Lin103: Wyświetlono użytkownikowi prędkość po aktualnym etapie testu
+***ZAKOŃCZONO 2 ETAP TESTU***
+
+
+
+---Lin39: Wysłano pakiet startowy
+---Lin44: Odebrano odpowiedź na pakiet startowy
+---Lin54: Obliczono ping na podstawie komunikacji i wyświetlono użytkownikowi
+***WYSŁANO INFORMACJĘ DO SERWERA O TYPIE TESTU***
+
+
+
+---Lin181: Wybrano test wysyłania
+---Lin58: Rozpoczęto test wysyłania danych
+---Lin67: Wysyłanie danych
+---Lin74: Wszystkie pakiety testowe wysłane
+---Lin82: Wysłanie pakietu kończącego etap testu
+---Lin91: Odebranie infomacji o ilości odebranych pakietów
+---Lin97: Obliczono ilość utraconych pakietów
+---Lin103: Wyświetlono użytkownikowi prędkość po aktualnym etapie testu
+***ZAKOŃCZONO 3 ETAP TESTU***
+
+
+
+---Lin39: Wysłano pakiet startowy
+---Lin44: Odebrano odpowiedź na pakiet startowy
+---Lin54: Obliczono ping na podstawie komunikacji i wyświetlono użytkownikowi
+***WYSŁANO INFORMACJĘ DO SERWERA O TYPIE TESTU***
+
+
+
+---Lin181: Wybrano test wysyłania
+---Lin58: Rozpoczęto test wysyłania danych
+---Lin67: Wysyłanie danych
+---Lin74: Wszystkie pakiety testowe wysłane
+---Lin82: Wysłanie pakietu kończącego etap testu
+---Lin91: Odebranie infomacji o ilości odebranych pakietów
+---Lin97: Obliczono ilość utraconych pakietów
+---Lin103: Wyświetlono użytkownikowi prędkość po aktualnym etapie testu
+***ZAKOŃCZONO 4 ETAP TESTU***
+
+
+
+---Lin39: Wysłano pakiet startowy
+---Lin44: Odebrano odpowiedź na pakiet startowy
+---Lin54: Obliczono ping na podstawie komunikacji i wyświetlono użytkownikowi
+***WYSŁANO INFORMACJĘ DO SERWERA O TYPIE TESTU***
+
+
+
+---Lin181: Wybrano test wysyłania
+---Lin58: Rozpoczęto test wysyłania danych
+---Lin67: Wysyłanie danych
+---Lin74: Wszystkie pakiety testowe wysłane
+---Lin82: Wysłanie pakietu kończącego etap testu
+---Lin91: Odebranie infomacji o ilości odebranych pakietów
+---Lin97: Obliczono ilość utraconych pakietów
+---Lin103: Wyświetlono użytkownikowi prędkość po aktualnym etapie testu
+***ZAKOŃCZONO 5 ETAP TESTU***
+
+
+
+---Lin39: Wysłano pakiet startowy
+---Lin44: Odebrano odpowiedź na pakiet startowy
+---Lin54: Obliczono ping na podstawie komunikacji i wyświetlono użytkownikowi
+***WYSŁANO INFORMACJĘ DO SERWERA O TYPIE TESTU***
+
+
+
+---Lin181: Wybrano test wysyłania
+---Lin58: Rozpoczęto test wysyłania danych
+---Lin67: Wysyłanie danych
+---Lin74: Wszystkie pakiety testowe wysłane
+---Lin82: Wysłanie pakietu kończącego etap testu
+---Lin91: Odebranie infomacji o ilości odebranych pakietów
+---Lin97: Obliczono ilość utraconych pakietów
+---Lin103: Wyświetlono użytkownikowi prędkość po aktualnym etapie testu
+***ZAKOŃCZONO 6 ETAP TESTU***
+
+
+
+---Lin39: Wysłano pakiet startowy
+---Lin44: Odebrano odpowiedź na pakiet startowy
+---Lin54: Obliczono ping na podstawie komunikacji i wyświetlono użytkownikowi
+***WYSŁANO INFORMACJĘ DO SERWERA O TYPIE TESTU***
+
+
+
+---Lin181: Wybrano test wysyłania
+---Lin58: Rozpoczęto test wysyłania danych
+---Lin67: Wysyłanie danych
+---Lin74: Wszystkie pakiety testowe wysłane
+---Lin82: Wysłanie pakietu kończącego etap testu
+---Lin91: Odebranie infomacji o ilości odebranych pakietów
+---Lin97: Obliczono ilość utraconych pakietów
+---Lin103: Wyświetlono użytkownikowi prędkość po aktualnym etapie testu
+***ZAKOŃCZONO 7 ETAP TESTU***
+
+
+
+---Lin39: Wysłano pakiet startowy
+---Lin44: Odebrano odpowiedź na pakiet startowy
+---Lin54: Obliczono ping na podstawie komunikacji i wyświetlono użytkownikowi
+***WYSŁANO INFORMACJĘ DO SERWERA O TYPIE TESTU***
+
+
+
+---Lin181: Wybrano test wysyłania
+---Lin58: Rozpoczęto test wysyłania danych
+---Lin67: Wysyłanie danych
+---Lin74: Wszystkie pakiety testowe wysłane
+---Lin82: Wysłanie pakietu kończącego etap testu
+---Lin91: Odebranie infomacji o ilości odebranych pakietów
+---Lin97: Obliczono ilość utraconych pakietów
+---Lin103: Wyświetlono użytkownikowi prędkość po aktualnym etapie testu
+***ZAKOŃCZONO 8 ETAP TESTU***
+
+
+
+---Lin39: Wysłano pakiet startowy
+---Lin44: Odebrano odpowiedź na pakiet startowy
+---Lin54: Obliczono ping na podstawie komunikacji i wyświetlono użytkownikowi
+***WYSŁANO INFORMACJĘ DO SERWERA O TYPIE TESTU***
+
+
+
+---Lin181: Wybrano test wysyłania
+---Lin58: Rozpoczęto test wysyłania danych
+---Lin67: Wysyłanie danych
+---Lin74: Wszystkie pakiety testowe wysłane
+---Lin82: Wysłanie pakietu kończącego etap testu
+---Lin91: Odebranie infomacji o ilości odebranych pakietów
+---Lin97: Obliczono ilość utraconych pakietów
+---Lin103: Wyświetlono użytkownikowi prędkość po aktualnym etapie testu
+***ZAKOŃCZONO 9 ETAP TESTU***
+
+
+
+---Lin39: Wysłano pakiet startowy
+---Lin44: Odebrano odpowiedź na pakiet startowy
+---Lin54: Obliczono ping na podstawie komunikacji i wyświetlono użytkownikowi
+***WYSŁANO INFORMACJĘ DO SERWERA O TYPIE TESTU***
+
+
+
+---Lin181: Wybrano test wysyłania
+---Lin58: Rozpoczęto test wysyłania danych
+---Lin67: Wysyłanie danych
+---Lin74: Wszystkie pakiety testowe wysłane
+---Lin82: Wysłanie pakietu kończącego etap testu
+---Lin91: Odebranie infomacji o ilości odebranych pakietów
+---Lin97: Obliczono ilość utraconych pakietów
+---Lin103: Wyświetlono użytkownikowi prędkość po aktualnym etapie testu
+***ZAKOŃCZONO 10 ETAP TESTU***
+
+
+
+---Lin39: Wysłano pakiet startowy
+---Lin44: Odebrano odpowiedź na pakiet startowy
+---Lin54: Obliczono ping na podstawie komunikacji i wyświetlono użytkownikowi
+***WYSŁANO INFORMACJĘ DO SERWERA O TYPIE TESTU***
+
+
+
+---Lin181: Wybrano test wysyłania
+---Lin58: Rozpoczęto test wysyłania danych
+---Lin67: Wysyłanie danych
+---Lin74: Wszystkie pakiety testowe wysłane
+---Lin82: Wysłanie pakietu kończącego etap testu
+---Lin91: Odebranie infomacji o ilości odebranych pakietów
+---Lin97: Obliczono ilość utraconych pakietów
+---Lin103: Wyświetlono użytkownikowi prędkość po aktualnym etapie testu
+***ZAKOŃCZONO 11 ETAP TESTU***
+
+
+
+---Lin39: Wysłano pakiet startowy
+---Lin44: Odebrano odpowiedź na pakiet startowy
+---Lin54: Obliczono ping na podstawie komunikacji i wyświetlono użytkownikowi
+***WYSŁANO INFORMACJĘ DO SERWERA O TYPIE TESTU***
+
+
+
+---Lin181: Wybrano test wysyłania
+---Lin58: Rozpoczęto test wysyłania danych
+---Lin67: Wysyłanie danych
+---Lin74: Wszystkie pakiety testowe wysłane
+---Lin82: Wysłanie pakietu kończącego etap testu
+---Lin91: Odebranie infomacji o ilości odebranych pakietów
+---Lin97: Obliczono ilość utraconych pakietów
+---Lin103: Wyświetlono użytkownikowi prędkość po aktualnym etapie testu
+***ZAKOŃCZONO 12 ETAP TESTU***
+
+
+
+---Lin39: Wysłano pakiet startowy
+---Lin44: Odebrano odpowiedź na pakiet startowy
+---Lin54: Obliczono ping na podstawie komunikacji i wyświetlono użytkownikowi
+***WYSŁANO INFORMACJĘ DO SERWERA O TYPIE TESTU***
+
+
+
+---Lin181: Wybrano test wysyłania
+---Lin58: Rozpoczęto test wysyłania danych
+---Lin67: Wysyłanie danych
+---Lin74: Wszystkie pakiety testowe wysłane
+---Lin82: Wysłanie pakietu kończącego etap testu
+---Lin91: Odebranie infomacji o ilości odebranych pakietów
+---Lin97: Obliczono ilość utraconych pakietów
+---Lin103: Wyświetlono użytkownikowi prędkość po aktualnym etapie testu
+***ZAKOŃCZONO 13 ETAP TESTU***
+
+
+
+---Lin39: Wysłano pakiet startowy
+---Lin44: Odebrano odpowiedź na pakiet startowy
+---Lin54: Obliczono ping na podstawie komunikacji i wyświetlono użytkownikowi
+***ZAKOŃCZENIE DZIAŁANIA KLIENTA***
+
+
+
