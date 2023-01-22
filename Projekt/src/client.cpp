@@ -12,12 +12,7 @@ void setup_sockets(const char * address, const char * port){
         perror("opening datagram socket");
         exit(1);
     }
-    sock2 = socket(AF_INET, SOCK_DGRAM, 0);
     Plik << "---Lin15: Otworzono gniazdo do odbierania\n";
-    if (bind(sock2,(struct sockaddr *)&read_name, sizeof read_name) == -1) {
-        perror("binding datagram socket");
-        exit(1);
-    }
     hp = gethostbyname(address);
     if (hp == (struct hostent *) 0) {
         fprintf(stderr, "%s: unknown host\n", address);
@@ -43,32 +38,32 @@ void send_first(int sock, int type, int packet_size_){
     }
     if (sendto(sock, (const void *) &first, sizeof first, 0, (struct sockaddr *) &name, sizeof name) == -1)
         perror("sending datagram message");
-    Plik << "---Lin44: Wysłano pakiet startowy\n";
+    Plik << "---Lin39: Wysłano pakiet startowy\n";
     int type_of_test, packet_size;
     time_t server_time_stamp;
     if ( read(sock, buf, 4096) == -1 ) {
         perror("receiving start packet");
         exit(2); 
     }
-    Plik << "---Lin49: Odebrano odpowiedź na pakiet startowy\n";
+    Plik << "---Lin44: Odebrano odpowiedź na pakiet startowy\n";
     timestamp = chrono::time_point_cast<std::chrono::microseconds>(chrono::system_clock::now());
     time_t last_packet_time = timestamp.time_since_epoch().count();
     memcpy(&type_of_test, buf, sizeof(int));
     memcpy(&packet_size, buf + sizeof(int), sizeof(int));
     memcpy(&server_time_stamp, buf + 2 * sizeof(int), sizeof(time_t));
     cout << "Ping: " << (last_packet_time - first_packet_time) / 1000.0 << "ms" << endl; 
-    Plik << "---Lin59: Obliczono ping na podstawie komunikacji i wyświetlono użytkownikowi\n";
+    Plik << "---Lin54: Obliczono ping na podstawie komunikacji i wyświetlono użytkownikowi\n";
 }
 
 void send_packet_upload(int sock, int packet_size_, int how_many_bytes){
-    Plik << "---Lin63: Rozpoczęto test wysyłania danych\n";
+    Plik << "---Lin58: Rozpoczęto test wysyłania danych\n";
     int bytes_send = 0;
     int loop = 1;
     char data_[packet_size_];
     for (int i = 0; i < packet_size_; ++i)
         data_[i] = 'x';
     data_[packet_size_] = '\0';
-    Plik << "---Lin72: Wysyłanie danych\n";
+    Plik << "---Lin67: Wysyłanie danych\n";
     while(bytes_send < how_many_bytes){
         packet_test test = {.id = loop, .data = data_};
         if (sendto(sock, (const void *) &test, strlen(data_) + sizeof(int), 0, (struct sockaddr *) &name, sizeof name) == -1)
@@ -78,11 +73,7 @@ void send_packet_upload(int sock, int packet_size_, int how_many_bytes){
         ++loop;
     }
 
-    Plik << "---Lin79: Wszystkie pakiety testowe wysłane\n";
-
-
-
-
+    Plik << "---Lin74: Wszystkie pakiety testowe wysłane\n";
 
     char stop[] = "STOP";
     packet_test last_packet = {.id = -1, .data = stop};
@@ -93,7 +84,7 @@ void send_packet_upload(int sock, int packet_size_, int how_many_bytes){
                 sizeof name) == -1)
             perror("sending datagram message");
 
-    Plik << "---Lin96: Wysłanie pakietu kończącego etap testu\n";
+    Plik << "---Lin82: Wysłanie pakietu kończącego etap testu\n";
     int number_of_packets;
     time_t first_packet_time;
     time_t last_packet_time;
@@ -101,20 +92,20 @@ void send_packet_upload(int sock, int packet_size_, int how_many_bytes){
         perror("receiving start packet");
         exit(2); 
     }
-    Plik << "---Lin106: Odebranie infomacji o ilości odebranych pakietów\n";
+    Plik << "---Lin91: Odebranie infomacji o ilości odebranych pakietów\n";
     memcpy(&number_of_packets, buf, sizeof(int));
     float packet_loss = calculate_packet_loss(number_of_packets, loop);
-    Plik << "---Lin112: Obliczono ilość utraconych pakietów\n";
+    Plik << "---Lin97: Obliczono ilość utraconych pakietów\n";
     if(packet_loss > 20)
     {
         PACKET_LOSS_ACHIEVED = 1;
     }
     print_internet_speed(packet_loss, how_many_bytes);
-    Plik << "---Lin118: Wyświetlono użytkownikowi prędkość po aktualnym etapie testu\n";
+    Plik << "---Lin103: Wyświetlono użytkownikowi prędkość po aktualnym etapie testu\n";
 }
 
 void receive_packet_download(int sock, int packet_size_, int how_many_bytes){
-    Plik << "---Lin117: Rozpoczęto test pobierania danych\n";
+    Plik << "---Lin107: Rozpoczęto test pobierania danych\n";
     int packet_count = 0;
     char *data;
     int id = 0;
@@ -126,7 +117,6 @@ void receive_packet_download(int sock, int packet_size_, int how_many_bytes){
         time_t first_packet_time;
         time_t last_packet_time;
         int bytes_received = read(sock, buf, 4096);
-        ++packet_count;
         if (bytes_received == -1)
         {
             perror("receiving stream packet");
@@ -140,7 +130,7 @@ void receive_packet_download(int sock, int packet_size_, int how_many_bytes){
         if (!terminated && (clock() - start) / (double)CLOCKS_PER_SEC > 0.2 )
         {
             Plik << "---Lin142: Przekroczono limit czasu odczytawania, liczba odczytanych pakietów: *** "<<packet_count<<" ***\n";                                                                                                                                                                                                                                                                                                                      
-            float packet_loss = calculate_packet_loss(packet_count, how_many_bytes * packet_size_);
+            float packet_loss = calculate_packet_loss(packet_count, how_many_bytes / (float)packet_size_);
             if(packet_loss > 20)
             {
                 PACKET_LOSS_ACHIEVED = 1;
@@ -158,7 +148,7 @@ void receive_packet_download(int sock, int packet_size_, int how_many_bytes){
                         exit(2); 
                     }
                     memcpy(&number_of_packets, buf, sizeof(int));
-                    float packet_loss = calculate_packet_loss(packet_count, number_of_packets);
+                    double packet_loss = calculate_packet_loss(packet_count, how_many_bytes / (float)packet_size_);
                     if(packet_loss > 20)
                     {
                         PACKET_LOSS_ACHIEVED = 1;
@@ -168,6 +158,7 @@ void receive_packet_download(int sock, int packet_size_, int how_many_bytes){
                 }
             break;
         }
+        ++packet_count;
     }
 }
 
@@ -205,6 +196,7 @@ int main(int argc, char *argv[])
         summary_bytes_to_send += 2e6 / 8;
         ++test_id;
     }
+    send_first(sock, 3, 0);
     Plik << "***ZAKOŃCZENIE DZIAŁANIA KLIENTA***\n\n\n\n";
     Plik.close();
     close(sock);

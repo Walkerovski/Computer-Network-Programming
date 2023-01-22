@@ -14,7 +14,7 @@ pair <int, int> interface_read(){
     cout<<"Prosimy o podanie wielkości pakietu. Wielkość pakietu musi być z przedziału 512 - 4096 (wielkość podana w bajtach)\n";
     cin>>input;
     int size_input = atoi(input.c_str());
-    while(size_input > 4096 || size_input < 512){
+    while(size_input > 4000 || size_input < 1){
         cout<<"Podane dane na wejściu są złe! Proszę wpisać wartość z przedziału 512 - 4096 (wielkość podana w bajtach)\n";
         cin>>input;
         size_input = atoi(input.c_str());

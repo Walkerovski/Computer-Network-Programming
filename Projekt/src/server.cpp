@@ -36,8 +36,6 @@ pair<packet_start, int> receive_first(){
     int test_type;
     int packet_size;
     time_t start_timestamp;
-    source_address.sin_family = AF_INET;
-    source_address.sin_port = htons(port);
     memcpy(&test_type, buf, sizeof(int));
     memcpy(&packet_size, buf + sizeof(int), sizeof(int));
     memcpy(&start_timestamp, buf + 2 * sizeof(int), sizeof(time_t));
@@ -51,9 +49,13 @@ pair<packet_start, int> receive_first(){
         response_first.type = DOWNLOAD;
         Plik << "---Lin41: Wybrano test pobierania\n";
     }
-    else{
+    else if(test_type == 2){
         response_first.type = UPLOAD;
         Plik << "---Lin41: Wybrano test wysyłania\n";
+    }
+    else if(test_type == 3){
+        summary_bytes_to_send = 2e5 / 8;
+        Plik << "---Lin58: Klient zakończył połączenie\n";
     }
     if (sendto(upload, (const void *) &response_first, sizeof response_first, 0, (struct sockaddr *) &source_address, source_len) == -1)
         perror("sending datagram message");
@@ -173,12 +175,14 @@ void start_test(time_t first_packet_timestamp, int type, int packet_size_, int h
 int main()
 {
     Plik << "***ROZPOCZĘCIE DZIAŁANIA SERWERA***\n\n\n\n";
-    int summary_bytes_to_send = 2e5 / 8;
     setup_sockets();
     Plik << "***ZAKOŃCZONO USTAWIANIE GNIAZD***\n\n\n\n";
     int test_id = 1;
     while(true){
         pair<packet_start, int> test_data = receive_first();
+        if(test_data.second == 3){
+            continue;
+        }
         Plik << "***ODEBRANO INFORMACJE OD KLIENTA O TYPE TESTU***\n\n\n\n";
         start_test(test_data.first.timestamp_, test_data.second, test_data.first.packet_size, summary_bytes_to_send);
         Plik << "***ZAKOŃCZONO " << test_id << " ETAP TESTU***\n\n\n\n";
