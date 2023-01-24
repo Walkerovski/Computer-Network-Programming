@@ -55,7 +55,7 @@ pair<packet_start, int> receive_first(){
     }
     else if(test_type == 3){
         response_first.type = BREAK;
-        summary_bytes_to_send = 2e5 / 8;
+        summary_bytes_to_send = 1e6 / 8;
         Plik << "---Lin56: Klient zakończył połączenie\n";
     }
     if (sendto(upload, (const void *) &response_first, sizeof response_first, 0, (struct sockaddr *) &source_address, source_len) == -1)

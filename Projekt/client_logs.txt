@@ -1,0 +1,66 @@
+***ROZPOCZĘCIE DZIAŁANIA KLIENTA***
+
+
+
+---Lin9: Otworzono gniazdo do wysyłania
+***ZAKOŃCZONO USTAWIANIE GNIAZD***
+
+
+
+***ZAKOŃCZONO INTERAKCJĘ Z UŻYTKOWNIKIEM***
+
+
+
+---Lin41: Wysłano pakiet startowy
+---Lin46: Odebrano odpowiedź na pakiet startowy
+---Lin56: Obliczono ping na podstawie komunikacji i wyświetlono użytkownikowi
+***WYSŁANO INFORMACJĘ DO SERWERA O TYPIE TESTU***
+
+
+
+---Lin165: Wybrano test pobierania
+---Lin107: Rozpoczęto test pobierania danych
+---Lin141: Zakończono odbieranie danych
+---Lin143: Udało się odebrać wszystkie pakiety! Etap zakończony
+---Lin156: Wypisano użytkownikowi aktualną prędkość
+***ZAKOŃCZONO 1 ETAP TESTU***
+
+
+
+---Lin41: Wysłano pakiet startowy
+---Lin46: Odebrano odpowiedź na pakiet startowy
+---Lin56: Obliczono ping na podstawie komunikacji i wyświetlono użytkownikowi
+***WYSŁANO INFORMACJĘ DO SERWERA O TYPIE TESTU***
+
+
+
+---Lin165: Wybrano test pobierania
+---Lin107: Rozpoczęto test pobierania danych
+---Lin130: Przekroczono limit czasu odczytawania, liczba odczytanych pakietów: *** 18219 ***
+---Lin141: Zakończono odbieranie danych
+***ZAKOŃCZONO 2 ETAP TESTU***
+
+
+
+---Lin41: Wysłano pakiet startowy
+---Lin46: Odebrano odpowiedź na pakiet startowy
+---Lin56: Obliczono ping na podstawie komunikacji i wyświetlono użytkownikowi
+***WYSŁANO INFORMACJĘ DO SERWERA O TYPIE TESTU***
+
+
+
+---Lin165: Wybrano test pobierania
+---Lin107: Rozpoczęto test pobierania danych
+---Lin130: Przekroczono limit czasu odczytawania, liczba odczytanych pakietów: *** 16456 ***
+---Lin141: Zakończono odbieranie danych
+***ZAKOŃCZONO 3 ETAP TESTU***
+
+
+
+---Lin41: Wysłano pakiet startowy
+---Lin46: Odebrano odpowiedź na pakiet startowy
+---Lin56: Obliczono ping na podstawie komunikacji i wyświetlono użytkownikowi
+***ZAKOŃCZENIE DZIAŁANIA KLIENTA***
+
+
+
