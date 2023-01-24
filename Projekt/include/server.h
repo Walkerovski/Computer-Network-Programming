@@ -9,7 +9,7 @@ struct sockaddr_in name;
 int upload, download;
 struct sockaddr_in source_address;
 socklen_t source_len = sizeof(source_address);
-int summary_bytes_to_send = 1e7 / 8;
+int summary_bytes_to_send = 1e6 / 8;
 ofstream Plik("./server_logs.txt");
 
 void setup_sockets();

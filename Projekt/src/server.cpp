@@ -148,7 +148,7 @@ void send_packet_download(int packet_size_, int how_many_bytes){
     char stop[] = "STOP";
     packet_test last_packet = {.id = -1, .data = stop};
 
-    usleep(100);
+    usleep(1000);
     if (sendto(upload, (const void *) &last_packet, sizeof(last_packet), 0, (struct sockaddr *) &source_address, source_len) == -1)
             perror("sending last packet");
     Plik << "---Lin149: Wysłanie pakietu kończącego etap testu\n";

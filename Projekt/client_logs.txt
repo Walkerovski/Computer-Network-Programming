@@ -36,8 +36,9 @@
 
 ---Lin165: Wybrano test pobierania
 ---Lin107: Rozpoczęto test pobierania danych
----Lin130: Przekroczono limit czasu odczytawania, liczba odczytanych pakietów: *** 18219 ***
 ---Lin141: Zakończono odbieranie danych
+---Lin143: Udało się odebrać wszystkie pakiety! Etap zakończony
+---Lin156: Wypisano użytkownikowi aktualną prędkość
 ***ZAKOŃCZONO 2 ETAP TESTU***
 
 
@@ -51,9 +52,56 @@
 
 ---Lin165: Wybrano test pobierania
 ---Lin107: Rozpoczęto test pobierania danych
----Lin130: Przekroczono limit czasu odczytawania, liczba odczytanych pakietów: *** 16456 ***
 ---Lin141: Zakończono odbieranie danych
+---Lin143: Udało się odebrać wszystkie pakiety! Etap zakończony
+---Lin156: Wypisano użytkownikowi aktualną prędkość
 ***ZAKOŃCZONO 3 ETAP TESTU***
+
+
+
+---Lin41: Wysłano pakiet startowy
+---Lin46: Odebrano odpowiedź na pakiet startowy
+---Lin56: Obliczono ping na podstawie komunikacji i wyświetlono użytkownikowi
+***WYSŁANO INFORMACJĘ DO SERWERA O TYPIE TESTU***
+
+
+
+---Lin165: Wybrano test pobierania
+---Lin107: Rozpoczęto test pobierania danych
+---Lin141: Zakończono odbieranie danych
+---Lin143: Udało się odebrać wszystkie pakiety! Etap zakończony
+---Lin156: Wypisano użytkownikowi aktualną prędkość
+***ZAKOŃCZONO 4 ETAP TESTU***
+
+
+
+---Lin41: Wysłano pakiet startowy
+---Lin46: Odebrano odpowiedź na pakiet startowy
+---Lin56: Obliczono ping na podstawie komunikacji i wyświetlono użytkownikowi
+***WYSŁANO INFORMACJĘ DO SERWERA O TYPIE TESTU***
+
+
+
+---Lin165: Wybrano test pobierania
+---Lin107: Rozpoczęto test pobierania danych
+---Lin130: Przekroczono limit czasu odczytawania, liczba odczytanych pakietów: *** 16363 ***
+---Lin141: Zakończono odbieranie danych
+***ZAKOŃCZONO 5 ETAP TESTU***
+
+
+
+---Lin41: Wysłano pakiet startowy
+---Lin46: Odebrano odpowiedź na pakiet startowy
+---Lin56: Obliczono ping na podstawie komunikacji i wyświetlono użytkownikowi
+***WYSŁANO INFORMACJĘ DO SERWERA O TYPIE TESTU***
+
+
+
+---Lin165: Wybrano test pobierania
+---Lin107: Rozpoczęto test pobierania danych
+---Lin130: Przekroczono limit czasu odczytawania, liczba odczytanych pakietów: *** 14070 ***
+---Lin141: Zakończono odbieranie danych
+***ZAKOŃCZONO 6 ETAP TESTU***
 
 
 
