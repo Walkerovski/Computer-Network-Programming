@@ -10,12 +10,12 @@ void setup_sockets(const char * address, const char * port){
     Plik << "---Lin9: Otworzono gniazdo do wysyłania\n";
     if (sock == -1) {
         perror("opening datagram socket");
-        exit(1);
+        std::exit(1);
     }
     hp = gethostbyname(address);
     if (hp == (struct hostent *) 0) {
         fprintf(stderr, "%s: unknown host\n", address);
-        exit(2);
+        std::exit(2);
     }
 
     memcpy((char *) &name.sin_addr, (char *) hp->h_addr, hp->h_length);
@@ -45,7 +45,7 @@ void send_first(int sock, int type, int packet_size_){
     time_t server_time_stamp;
     if ( read(sock, buf, 4096) == -1 ) {
         perror("receiving start packet");
-        exit(2); 
+        std::exit(2); 
     }
     Plik << "---Lin46: Odebrano odpowiedź na pakiet startowy\n";
     timestamp = chrono::time_point_cast<std::chrono::microseconds>(chrono::system_clock::now());
@@ -90,7 +90,7 @@ void send_packet_upload(int sock, int packet_size_, int how_many_bytes){
     time_t last_packet_time;
     if ( read(sock, buf, 4096) == -1 ) {
         perror("receiving start packet");
-        exit(2); 
+        std::exit(2); 
     }
     Plik << "---Lin91: Odebranie infomacji o ilości odebranych pakietów\n";
     memcpy(&number_of_packets, buf, sizeof(int));
@@ -110,7 +110,8 @@ void receive_packet_download(int sock, int packet_size_, int how_many_bytes){
     char *data;
     int id = 0;
     bool terminated = false;
-    time_t start = clock();
+    auto timestamp = chrono::time_point_cast<std::chrono::milliseconds>(chrono::system_clock::now());
+    time_t start_time = timestamp.time_since_epoch().count();
     packet_response_start server_response;
     while(true){
         int number_of_packets;
@@ -120,14 +121,16 @@ void receive_packet_download(int sock, int packet_size_, int how_many_bytes){
         if (bytes_received == -1)
         {
             perror("receiving stream packet");
-            exit(2);
+            std::exit(2);
         }
         if (bytes_received == 0)
             break;
         if (bytes_received == 8)
             break;
         memcpy(&id, buf, sizeof(int));
-        if (!terminated && (clock() - start) / (double)CLOCKS_PER_SEC > 0.2 )
+        timestamp = chrono::time_point_cast<std::chrono::milliseconds>(chrono::system_clock::now());
+        time_t actual_time = timestamp.time_since_epoch().count();
+        if (!terminated && (actual_time - start_time) > 1000 )
         {
             Plik << "---Lin130: Przekroczono limit czasu odczytawania, liczba odczytanych pakietów: *** "<<packet_count<<" ***\n";                                                                                                                                                                                                                                                                                                                      
             float packet_loss = calculate_packet_loss(packet_count, how_many_bytes / (float)packet_size_);
@@ -145,10 +148,10 @@ void receive_packet_download(int sock, int packet_size_, int how_many_bytes){
                     Plik << "---Lin143: Udało się odebrać wszystkie pakiety! Etap zakończony\n";
                     if ( read(sock, buf, 4096) == -1 ) {
                         perror("receiving stats packet");
-                        exit(2); 
+                        std::exit(2); 
                     }
                     memcpy(&number_of_packets, buf, sizeof(int));
-                    double packet_loss = calculate_packet_loss(packet_count, how_many_bytes / (float)packet_size_);
+                    double packet_loss = calculate_packet_loss(packet_count, how_many_bytes / (double)packet_size_);
                     if(packet_loss > 20)
                     {
                         PACKET_LOSS_ACHIEVED = 1;
@@ -177,7 +180,7 @@ int main(int argc, char *argv[])
 {
     if (argc != 3){
         cout << "Prosimy o podanie adresu serwera i portu" << endl;
-        exit(0);
+        std::exit(0);
     }
     Plik << "***ROZPOCZĘCIE DZIAŁANIA KLIENTA***\n\n\n\n";
     setup_sockets(argv[1], argv[2]);
@@ -185,7 +188,7 @@ int main(int argc, char *argv[])
     pair <int, int> user_input = interface_read();
     Plik << "***ZAKOŃCZONO INTERAKCJĘ Z UŻYTKOWNIKIEM***\n\n\n\n";
     int test_id = 1;
-    int summary_bytes_to_send = 2e5 / 8;
+    int summary_bytes_to_send = 1e6 / 8;
     while(true){
         send_first(sock, user_input.first, user_input.second);
         Plik << "***WYSŁANO INFORMACJĘ DO SERWERA O TYPIE TESTU***\n\n\n\n";
@@ -193,12 +196,12 @@ int main(int argc, char *argv[])
         Plik << "***ZAKOŃCZONO " << test_id << " ETAP TESTU***\n\n\n\n";
         if(PACKET_LOSS_ACHIEVED)
             break;
-        summary_bytes_to_send += 2e6 / 8;
+        summary_bytes_to_send += 1e7 / 8;
         ++test_id;
     }
     send_first(sock, 3, 0);
     Plik << "***ZAKOŃCZENIE DZIAŁANIA KLIENTA***\n\n\n\n";
     Plik.close();
     close(sock);
-    exit(0);
+    std::exit(0);
 }

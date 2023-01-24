@@ -71,7 +71,8 @@ void receive_packet_upload(time_t first_packet_timestamp){
     char *data;
     int id = 0;
     bool terminated = false;
-    time_t start = clock();
+    auto timestamp = chrono::time_point_cast<std::chrono::milliseconds>(chrono::system_clock::now());
+    time_t start_time = timestamp.time_since_epoch().count();
     packet_response_start server_response;
     while(true){
         int bytes_received = read(download, buf, 4096);
@@ -87,7 +88,9 @@ void receive_packet_upload(time_t first_packet_timestamp){
             break;
 
         memcpy(&id, buf, sizeof(int));
-        if (!terminated && (clock() - start) / (double)CLOCKS_PER_SEC > 0.2 )
+        timestamp = chrono::time_point_cast<std::chrono::milliseconds>(chrono::system_clock::now());
+        time_t actual_time = timestamp.time_since_epoch().count();
+        if (!terminated && (actual_time - start_time) > 1000 )
         {
             Plik << "---Lin90: Przekroczono limit czasu odczytawania, liczba odczytanych pakietów: *** "<<packet_count<<" ***\n";
             auto timestamp = chrono::time_point_cast<std::chrono::microseconds>(chrono::system_clock::now());
@@ -145,7 +148,7 @@ void send_packet_download(int packet_size_, int how_many_bytes){
     char stop[] = "STOP";
     packet_test last_packet = {.id = -1, .data = stop};
 
-    sleep(1);
+    usleep(100);
     if (sendto(upload, (const void *) &last_packet, sizeof(last_packet), 0, (struct sockaddr *) &source_address, source_len) == -1)
             perror("sending last packet");
     Plik << "---Lin149: Wysłanie pakietu kończącego etap testu\n";
@@ -185,9 +188,10 @@ int main()
             continue;
         }
         Plik << "***ODEBRANO INFORMACJE OD KLIENTA O TYPE TESTU***\n\n\n\n";
+        usleep(100);
         start_test(test_data.first.timestamp_, test_data.second, test_data.first.packet_size, summary_bytes_to_send);
         Plik << "***ZAKOŃCZONO " << test_id << " ETAP TESTU***\n\n\n\n";
-        summary_bytes_to_send += 2e6 / 8;
+        summary_bytes_to_send += 1e7 / 8;
         ++test_id;
     }
     Plik << "***ZAKOŃCZENIE DZIAŁANIA SERWERA***\n\n\n\n";

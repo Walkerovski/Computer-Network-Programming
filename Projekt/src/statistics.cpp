@@ -7,6 +7,6 @@ double calculate_packet_loss(double packets_received, double packets_sent){
 }
 
 void print_internet_speed(double packet_loss, int how_many_bytes){
-    cout << (1 - (packet_loss / 100))* how_many_bytes * 5 * 8 / 1e6 <<"Mbps\n";
+    cout << (1 - (packet_loss / 100))* how_many_bytes * 8 / 1e6 <<"Mbps\n";
     return;
 }
